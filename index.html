@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Biến Đổi Chuỗi</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin: 20px;
+    }
+
+    #inputString {
+      width: 90%;
+      padding: 8px;
+      margin-bottom: 10px;
+    }
+
+    button {
+      padding: 8px 16px;
+      margin: 5px;
+      cursor: pointer;
+    }
+
+    .red {
+      color: red;
+    }
+  </style>
+</head>
+<body>
+  <h2>Biến Đổi Chuỗi</h2>
+  
+  <label for="inputString">Nhập chuỗi:</label>
+  <textarea id="inputString" placeholder="Nhập chuỗi..."></textarea>
+  
+  <button onclick="transformString('+')">Biến đổi (+)</button>
+  <button onclick="transformString('-')">Biến đổi (-)</button>
+
+  <script>
+    function biendoi(chuoi, phepBienDoi) {
+      const mapping = {
+        'A': ['Bb', 'G#'],
+        'Bb': ['A', 'C'],
+        'B': ['A#', 'C#'],
+        'C': ['B', 'D'],
+        'C#': ['C', 'D#'],
+        'D': ['C#', 'E'],
+        'Eb': ['D', 'F'],
+        'E': ['D#', 'F#'],
+        'F': ['E', 'G'],
+        'F#': ['F', 'G#'],
+        'G': ['F#', 'A'],
+        'G#': ['G', 'A#'],
+      };
+
+      const words = chuoi.split(' ');
+
+      const result = words.map(word => {
+        if (word.match(/[A-G]|(?:\[.*\])/)) {
+          if (word.startsWith('[') && word.endsWith(']')) {
+            const chordParts = word.substring(1, word.length - 1).split('');
+            const note = chordParts[0];
+            const num = chordParts.slice(1).join('');
+
+            const transformedNote = mapping[note][phepBienDoi];
+
+            // Áp dụng màu đỏ cho hợp âm
+            return `[<span class="red">${transformedNote}</span>${num}]`;
+          } else {
+            return `<span class="red">${mapping[word][phepBienDoi]}</span>`;
+          }
+        } else {
+          return word;
+        }
+      });
+
+      return result.join(' ');
+    }
+
+    function transformString(phepBienDoi) {
+      const inputString = document.getElementById('inputString');
+      
+      if (inputString.value.trim() === '') {
+        alert('Vui lòng nhập chuỗi.');
+        return;
+      }
+
+      const transformedString = biendoi(inputString.value, (phepBienDoi === '+') ? 1 : 0);
+      inputString.innerHTML = transformedString;
+    }
+  </script>
+</body>
+</html>
